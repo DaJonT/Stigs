@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#Uses the dpkg command to view installed packages and grep for the specified package
+#Function that checks if "rsh-server" is installed
+checkrsh=$(dpkg -l | grep rsh-server)
+
+#The -n flag checks if the length of the string $checkrsh is non-zero
+#indicating that the rsh-server package is installed. 
+if [ -n "$checkrsh" ]; then
+	# If the function returns output echo the following statements
+	echo "rsh-server is installed"
+	echo "This system is not compliant."
+	# Asks the user for input and checks if it is any variation of
+	# y or yes
+	read -p "Would you like to uninstall rsh-server? y/n" confirm
+	if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+		# Command to delete the package completely and 
+		# print confirmation to the user
+		sudo apt-get purge rsh-server
+		echo "rsh-server is uninstalled."
+	else exit
+	fi
+else
+	echo "rsh-server is not installed"
+fi 

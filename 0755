@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Configuration lines to set the correct permissions
+config_lines="
+sudo chmod 0755 /var/log
+"
+
+# Check the current permissions of /var/log
+checklog=$(stat -c "%n %a" /var/log)
+
+# Check if the permissions are correct
+if [[ $checklog =~ "/var/log 775" ]]; then
+    echo "The system is secure." # Inform the user that the system is secure
+else
+    echo "This is a finding." # Notify the user of a security issue
+    echo "The '/var/log' directory is too permissive." # Provide more details about the issue
+    read -p "Would you like to configure the /var/log directory with a mode of 755? (y/n)" confirm
+
+    # Act based on user input
+    if [[ $confirm == [yY][eE][sS] || $confirm == [yY] ]]; then
+        echo "$config_lines" # Show the user the configuration lines that will be executed
+    else
+        exit # Exit the script if the user chooses not to make changes
+    fi
+fi
+
+exit # Exit the script after processing
+

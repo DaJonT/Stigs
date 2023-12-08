@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Configuration lines to set specific options in sshd_config
+config_lines="
+PermitEmptyPasswords no
+PermitUserEnvironment no
+"
+
+# Check the sshd_config file for specified options
+checkssh=$(egrep -r '(Permit(.*?)(Passwords|Environment))' /etc/ssh/sshd_config)
+
+# Check if the required options are set in the sshd_config file
+if [[ $checkssh =~ "PermitEmptyPasswords no" && $checkssh =~ "PermitUserEnvironment no" ]]; then
+    echo "The system is secure." # Inform the user that the system is secure
+else
+    echo "This is a finding." # Notify the user of a security issue
+    echo "Unattended or automatic login via SSH is disabled." 
+    read -p "Would you like to allow unattended or automatic login via SSH? (y/n)" confirm
+
+    # Act based on user input
+    if [[ $confirm == [yY][eE][sS] || $confirm == [yY] ]]; then
+        echo "$config_lines" | sudo tee -a /etc/ssh/sshd_config > /dev/null # Apply configuration changes
+    else
+        exit # Exit the script if the user chooses not to make changes
+    fi
+fi
+
+exit # Exit the script after processing
