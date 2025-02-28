@@ -1,3 +1,10 @@
+Automated detection and remediation of insecure configurations in Linux 
+environments.
+
+Enhanced system security by streamlining the enforcement of critical STIG 
+requirements, reducing manual efforts, and ensuring adherence to DoD 
+security policies. 
+
 Usage: ./checkrsh
 The script utilizes the dpkg command to view installed packages and uses grep to search for the presence of the rsh-server package. If the rsh-server package is found, the script notifies the user, indicates non-compliance, and provides the option to uninstall the rsh-server package. If the package is not found, the script informs the user that rsh-server is not installed.
 
